@@ -76,9 +76,10 @@ df_rank = df.rank(ascending=False)
 top5_leagues = df[pd.notna(df_rank[df_rank<=5])].dropna(how='all').fillna(0)
 
 # the following are the countries whose leagues have ever been among the top 5 European leagues.
-colors_dict = {'Austria':'#EF3340', 'Belgium':'purple', 'East Germany':'gray', 'England':'#cf081f', 'France':'#0072bb',
-               'Germany':'black', 'Hungary':'green', 'Italy':'#4B61D1', 'Netherlands':'#dfa837', 'Spain':'#f1bf00',
-               'Portugal':'#C4002D', 'Scotland':'navy', 'Soviet Union':'crimson', 'Yugoslavia':'dodgerblue'}
+colors_dict = {'Austria':'#EF3340', 'Belgium':'purple', 'East Germany':'gray', 'England':'#cf081f', 
+               'France':'#0072bb', 'Germany':'black', 'Hungary':'green', 'Italy':'#4B61D1', 
+               'Netherlands':'#dfa837', 'Spain':'#f1bf00', 'Portugal':'#C4002D', 'Scotland':'navy', 
+               'Soviet Union':'crimson', 'Yugoslavia':'dodgerblue'}
 
 # this function creates an animation from the historical ranks of the current top 5 leagues in European football
 LineplotAnimation(df=df.fillna(0),
