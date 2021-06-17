@@ -1,13 +1,15 @@
-# plot_animation
+There are two python functions in animated_plots.py as listed below.
 
 ```python
 BarchartAnimation(df, filename=None, n_bars=None, fixed_max=True, periods_per_second=1.4, frames_per_period=70,
                   period_pause=110, colors=None, title=None, barlabel_format='{:,.2f}', barlabel_position='inside', 
                   optional_text=None)
 ```                      
-A function that creates a running bar chart animation (where each figure is size (12,5)) 
-using FuncAnimation from matplotlib.animation library. Data must be a wide pandas DataFrame 
-where columns represent time periods and indexes represent categories.
+A function that creates a running bar chart animation where for a given dataframe df, 
+the top `n_bars` values for each column will be plotted as bars ranked from 1st to 
+`n_bars`th and joined together using FuncAnimation from matplotlib.animation library 
+to create a running animation. Data must be a wide pandas DataFrame where columns 
+represent time periods and indexes represent categories.
 
 If a filename is passed (with an extension supported by ffmpeg), then the animation will 
 be saved as a file. If no filename is passed, it will be returned as an HTML video and 
@@ -22,7 +24,9 @@ LineplotAnimation(df, filename=None, categories=None, rank=True, fixed_max=True,
 
 A function that creates a running line chart animation using FuncAnimation from 
 matplotlib.animation library. Data must be a wide pandas DataFrame where columns
-represent time periods and indexes represent categories.
+represent time periods and indexes represent categories. For a given dataframe df and 
+categories (which is a subset of df.index), each animation frame plots the value of each
+category in a particular column of df.
 
 Similar to above, if a filename is passed (with an extension supported by ffmpeg), then 
 the animation will be saved as a file. If no filename is passed, it will be returned as 
