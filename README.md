@@ -10,7 +10,8 @@ A function that creates a running bar chart animation (where each figure is size
 pandas DataFrame where columns represent time periods and indexes represent categories.
 If a filename is passed (with extension .mp4), then the animation will be saved as
 a file. If no filename is passed, it will be returned as an HTML video and embedded
-into Jupyter notebook.
+into Jupyter notebook (if you are using it).
+
 You must have ffmpeg installed on your computer to save videos. ffmpeg can be 
 downloaded from https://www.ffmpeg.org/download.html. Restart your computer after 
 installation.
@@ -27,16 +28,18 @@ matplotlib.animation library. Data must be a wide pandas DataFrame where columns
 represent time periods and indexes represent categories.
 If a filename is passed (with extension .mp4), then the animation will be saved as
 a file. If no filename is passed, it will be returned as an HTML video and embedded
-into Jupyter notebook.
+into Jupyter notebook (if you are using it).
+
 You must have ffmpeg installed on your computer to save videos. ffmpeg can be downloaded
 from https://www.ffmpeg.org/download.html. Restart your computer after installation.
 
+---
+# Demo:
 
 ```python
-
 import pandas as pd
 from animated_plots import BarchartAnimation, LineplotAnimation
-
+# get data
 def get_uefa_coefficient_tables(end_year=None):
     import urllib.request as request
     from bs4 import BeautifulSoup
@@ -69,20 +72,23 @@ def get_country_coefficients():
     for table in country_coefficients_dfs[1:]:
         rankings = rankings.merge(table, on='country', how='outer')
     return rankings.set_index('country')
-
+    
+# df contains the historical UEFA country coefficients of all UEFA member countries
+# notice indexes correspond to countries and columns correspond to seasons.
 df = get_country_coefficients()
 
+df_rank = df.rank(ascending=False)
+# top5_leagues keeps the UEFA coefficients of only the top 5 leagues in any given year. 
+# if there is a country whose league never was among the top 5, that country is dropped altogether
+top5_leagues = df[pd.notna(df_rank[df_rank<=5])].dropna(how='all').fillna(0)
 
+# the following are the countries whose leagues have ever been among the top 5 European leagues.
 colors_dict = {'Austria':'#EF3340', 'Belgium':'purple', 'East Germany':'gray', 'England':'#cf081f', 'France':'#0072bb',
                'Germany':'black', 'Hungary':'green', 'Italy':'#4B61D1', 'Netherlands':'#dfa837', 'Spain':'#f1bf00',
                'Portugal':'#C4002D', 'Scotland':'navy', 'Soviet Union':'crimson', 'Yugoslavia':'dodgerblue'}
-df_rank = df.rank(ascending=False)
-top5_leagues = df[pd.notna(df_rank[df_rank<=5])].dropna(how='all').fillna(0)
 
-
-
-
-LineplotAnimation(df=df.fillna(0).iloc[:,:10],
+# this function creates an animation from the historical ranks of the current top 5 leagues in European football
+LineplotAnimation(df=df.fillna(0),
                   filename='CurrentTop5ThroughTheYears.mp4', 
                   categories=['Spain','England','Germany','France','Italy'], 
                   fixed_max=False, 
@@ -94,7 +100,7 @@ LineplotAnimation(df=df.fillna(0).iloc[:,:10],
                   periods_per_frame=10,
                   yaxis_label='UEFA Country Rank')
 
-
+# this function creates an animation from the top 5 leagues every season.
 BarchartAnimation(df=top5_leagues, 
                   filename='Top5EuropeanLeagues.mp4', 
                   n_bars=5, 
@@ -104,6 +110,5 @@ BarchartAnimation(df=top5_leagues,
                   period_pause=100, 
                   colors=colors_dict, 
                   title='Top 5 European Leagues')
-
 ```
     
