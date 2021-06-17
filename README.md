@@ -40,23 +40,16 @@ from https://www.ffmpeg.org/download.html. Restart your computer after installat
 import pandas as pd
 from animated_plots import BarchartAnimation, LineplotAnimation
 # get data
-def get_uefa_coefficient_tables(end_year=None):
+def get_uefa_coefficient_tables():
     import urllib.request as request
     from bs4 import BeautifulSoup
     
-    end_of_data = 2022
-    urls = (['https://kassiesa.net/uefa/data/method1/crank'+str(num)+'.html' for num in range(1960,1999)] +
-            ['https://kassiesa.net/uefa/data/method2/crank'+str(num)+'.html' for num in range(1999,2004)] + 
-            ['https://kassiesa.net/uefa/data/method3/crank'+str(num)+'.html' for num in range(2004,2009)] + 
-            ['https://kassiesa.net/uefa/data/method4/crank'+str(num)+'.html' for num in range(2009,2018)] + 
-            ['https://kassiesa.net/uefa/data/method5/crank'+str(num)+'.html' for num in range(2018,end_of_data)])
-    
-    year_url_tuples = zip(range(1960, end_of_data), urls)
-    if end_year is not None:
-        year_url_tuples = [(year, url) for year, url in year_url_tuples if year<=end_year]
+    methods = [1]*(1999-1960) + [2]*(2004-1999) + [3]*(2009-2004) + [4]*(2018-2009) + [5]*(2022-2018)
+    urls = ['https://kassiesa.net/uefa/data/method{}/crank{}.html'.format(method, year) 
+            for method,year in zip(methods,range(1960,2022))]
     
     tables = []
-    for year, url in year_url_tuples:
+    for year, url in zip(range(1960, 2022), urls):
         print(year, end='\r')
         page = request.urlopen(url)
         soup = BeautifulSoup(page)
